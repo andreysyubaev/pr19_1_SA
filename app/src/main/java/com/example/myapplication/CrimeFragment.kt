@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import android.util.Log
 
 data class Crime(var title: String = "", var date: String = "", var isSolved: Boolean = false)
 
@@ -23,6 +25,7 @@ class CrimeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
+        Log.d("CrimeFragment", "onCreate called")
     }
 
     override fun onCreateView(
@@ -39,18 +42,24 @@ class CrimeFragment : Fragment() {
             text = crime.date
             isEnabled = false
         }
+        Log.d("CrimeFragment", "onCreateView called")
         return view
     }
 
     override fun onStart() {
         super.onStart()
+        Log.d("CrimeFragment", "onStart called")
         val titleWatcher = object : TextWatcher {
             override fun beforeTextChanged(sequence: CharSequence?, start: Int, count: Int, after: Int) {
                 // пусто
             }
 
             override fun onTextChanged(sequence: CharSequence?, start: Int, before: Int, count: Int) {
-                crime.title = sequence.toString()
+                if (!sequence.isNullOrBlank()) {
+                    crime.title = sequence.toString()
+                } else {
+                    Toast.makeText(activity, "Title не может быть пустым", Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun afterTextChanged(sequence: Editable?) {
@@ -64,3 +73,4 @@ class CrimeFragment : Fragment() {
         }
     }
 }
+
